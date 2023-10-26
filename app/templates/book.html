@@ -1,0 +1,86 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<style>
+    hr {
+        border: none;
+        height: 2px;
+        background-color: #212529;
+        margin: 20px 0;
+    }
+
+    .container {
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        flex-wrap: wrap;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .container > div {
+        flex: 1;
+        padding: 10px;
+    }
+
+    .container .mb-4 {
+        max-width: 500px;
+        margin-left: auto;
+    }
+
+    .container img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    .mt-4 {
+        margin-top: 40px;
+    }
+
+    .card {
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        border-radius: 5px;
+    }
+
+    .card-body {
+        padding: 15px
+    }
+
+    .btn {
+        margin: 20px 0;
+    }
+</style>
+
+<div class="container">
+    <div>
+        <h1>{{book.title}}</h1>
+        <p> Автор: {{book.author}} </p>
+        <p> Издательство: {{book.publisher}} </p>
+        <p> Количество страниц: {{book.page_count}} </p>
+        <hr>
+        {{description | safe}}
+    </div>
+    <div class="mb-4">
+        <img src="/static/{{book.file_name}}" alt="cover">
+    </div>
+
+
+    <div class="mt-4">
+        <h2> Рецензии </h2>
+        {% if not been_reviewed and current_user.is_authenticated %}
+            <a href="/books/review/{{book.id}}" class="btn btn-primary">Написать рецензию</a>
+        {% endif %}
+
+        {% for review in reviews %}
+        <div class="card mb-4">
+              <div class="card-body">
+                <h5 class="card-title">{{review.user_name}} {{review.user_last_name}}</h5>
+                <h6 class="card-subtitle mb-2">Оценка: {{review.rating}}</h6>
+                <p class="card-text">{{review.text|markdown}}</p>
+              </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+
+{% endblock %}
